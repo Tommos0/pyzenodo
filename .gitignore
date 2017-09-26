@@ -3,3 +3,4 @@ pyzenodo.egg-info
 __pycache__
 .cache
 .idea
+.coverage

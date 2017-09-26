@@ -8,10 +8,11 @@ python:
 install:
   - pip install .
   - pip install pytest
+  - pip install coveralls
 cache: pip
-script: pytest
-#after_success:
-#  - coveralls
+script: pytest --cov=pyzenodo
+after_success:
+  - coveralls
 notifications:
   email:
     - t.klaver@esciencecenter.nl
