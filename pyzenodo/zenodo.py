@@ -42,6 +42,6 @@ class Zenodo(object):
         return None
 
     def _get_records(self, params):
-        url = base_url + 'records?' + urlparse.urlencode(params)
+        url = base_url + 'records?' + urlencode(params)
         return requests.get(url).json()
 
