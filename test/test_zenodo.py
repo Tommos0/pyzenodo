@@ -24,6 +24,3 @@ def test_search(zen):
 
 def test_search_eq_github_search(zen):
     assert str(zen.search('eSalsa')[0]) == str(zen.find_by_github_repo('NLeSC/eSalsa-MPI'))
-
-
-
