@@ -3,15 +3,17 @@
 
 from setuptools import setup, find_packages
 
+__version = '0.0.3'
+
 setup(
     name='pyzenodo',
-    version='0.0.2',
+    version=__version,
     description='Python wrapper for the Zenodo REST API',
     author='Tom Klaver',
     author_email='t.klaver@esciencecenter.nl',
     license='Apache 2.0',
     url='https://github.com/Tommos0/pyzenodo',
-    download_url='https://github.com/Tommos0/pyzenodo/archive/0.0.2.tar.gz',
+    download_url='https://github.com/Tommos0/pyzenodo/archive/%s.tar.gz' % __version,
     include_package_data=True,
     keywords=['zenodo', 'pyzenodo'],
     classifiers=[

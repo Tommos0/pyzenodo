@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-__version__ = '0.0.2'
 
 import requests
 import re
@@ -27,11 +26,13 @@ class Record(object):
     def _row_to_version(row):
         link = row.select('a')[0]
         texts = row.select('small')
+        recid = re.match(r'/record/(\d*)', link.attrs['href']).group(1)
         return {
-            'recid' : re.match(r'/record/(\d*)', link.attrs['href']).group(1),
+            'recid' : recid,
             'name'  : link.text,
             'doi'   : texts[0].text,
-            'date'  : texts[1].text
+            'date'  : texts[1].text,
+            'original_version' : Zenodo.get_record(recid).original_version()
         }
 
     def get_versions(self):
@@ -42,6 +43,12 @@ class Record(object):
         soup = BeautifulSoup(res.text, 'html.parser')
         version_rows = soup.select('.well.metadata > table.table tr')
         return [self._row_to_version(row) for row in version_rows]
+
+    def original_version(self):
+        for identifier in self.data['metadata']['related_identifiers']:
+            if identifier['relation'] == 'isSupplementTo':
+                return re.match(r'.*/tree/(.*$)', identifier['identifier']).group(1)
+        return None
 
     def __str__(self):
         return str(self.data)
@@ -68,7 +75,7 @@ class Zenodo(object):
             return matches.group(1)
         return None
 
-    def find_by_github_repo(self, search):
+    def find_record_by_github_repo(self, search):
         records = self.search(search)
         for record in records:
             if 'metadata' not in record.data or 'related_identifiers' not in record.data['metadata']:
@@ -79,6 +86,12 @@ class Zenodo(object):
                     return record
         return None
 
-    def _get_records(self, params):
+    @staticmethod
+    def get_record(recid):
+        url = base_url + 'records/' + recid
+        return Record(requests.get(url).json())
+
+    @staticmethod
+    def _get_records(params):
         url = base_url + 'records?' + urlencode(params)
         return [Record(hit) for hit in requests.get(url).json()['hits']['hits']]

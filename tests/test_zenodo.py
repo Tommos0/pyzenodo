@@ -12,9 +12,9 @@ def zen():
 
 
 def test_find_by_githup_repo(zen):
-    assert zen.find_by_github_repo('NLeSC/eSalsa-MPI') is not None
-    assert zen.find_by_github_repo('eSalsa') is None
-    assert zen.find_by_github_repo('SomeRandom/Repo') is None
+    assert zen.find_record_by_github_repo('NLeSC/eSalsa-MPI') is not None
+    assert zen.find_record_by_github_repo('eSalsa') is None
+    assert zen.find_record_by_github_repo('SomeRandom/Repo') is None
 
 
 def test_search(zen):
@@ -23,11 +23,22 @@ def test_search(zen):
 
 
 def test_search_eq_github_search(zen):
-    assert str(zen.search('eSalsa')[0]) == str(zen.find_by_github_repo('NLeSC/eSalsa-MPI'))
+    assert str(zen.search('eSalsa')[0]) == str(zen.find_record_by_github_repo('NLeSC/eSalsa-MPI'))
+
+
+def test_original_version_for_record(zen):
+    record = zen.find_record_by_github_repo('NLeSC/eSalsa-MPI')
+    original_version = record.original_version()
+    assert original_version is not None and original_version != ""
+
+
+def test_get_record():
+    record = zenodo.Zenodo.get_record('910040')
+    assert record.data['conceptdoi'] == '10.5281/zenodo.910039'
 
 
 def test_get_versions_for_record(zen):
-    record = zen.find_by_github_repo('NLeSC/eSalsa-MPI')
+    record = zen.find_record_by_github_repo('NLeSC/eSalsa-MPI')
     versions = record.get_versions()
     assert len(versions) > 2
     for version in versions:
@@ -35,3 +46,4 @@ def test_get_versions_for_record(zen):
         assert version['name'] is not None
         assert version['doi'] is not None and 'zenodo' in version['doi']
         assert version['date'] is not None
+        assert version['original_version'] is not None
