@@ -27,7 +27,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     packages=find_packages(),
-    install_requires=['requests'],
+    install_requires=['requests', 'Beautifulsoup4'],
     # install_requires=['feedparser >= 5.1.0', 'pytz', 'requests', 'pathlib'],
     long_description="""\
 A Python wrapper for the Zenodo REST API
