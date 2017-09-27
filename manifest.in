@@ -1,3 +1,2 @@
-include license
-include readme.md
-include doc/index.rst
+include LICENSE.txt
+include README.md
