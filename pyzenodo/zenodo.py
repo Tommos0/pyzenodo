@@ -36,13 +36,19 @@ class Record(object):
         }
 
     def get_versions(self):
-        """Get version details from Zenodo webpage (it is not available in the REST api)
-
-        """
+        """Get version details from Zenodo webpage (it is not available in the REST api)"""
         res = requests.get('https://zenodo.org/record/'+self.data['conceptrecid'])
         soup = BeautifulSoup(res.text, 'html.parser')
         version_rows = soup.select('.well.metadata > table.table tr')
-        return [self._row_to_version(row) for row in version_rows]
+        if len(version_rows) == 0:  # when only 1 version
+            return [{
+                'recid': self.data['id'],
+                'name': '1',
+                'doi': self.data['doi'],
+                'date': self.data['created'],
+                'original_version': self.original_version()
+            }]
+        return [self._row_to_version(row) for row in version_rows if len(row.select('td')) > 1]
 
     def original_version(self):
         for identifier in self.data['metadata']['related_identifiers']:

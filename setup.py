@@ -29,6 +29,7 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Scientific/Engineering',
     ],
     packages=find_packages(),
     install_requires=['requests', 'Beautifulsoup4'],
