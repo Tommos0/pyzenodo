@@ -1,19 +1,28 @@
 sudo: false
 language: python
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"
+- '2.7'
+- '3.4'
+- '3.5'
+- '3.6'
 install:
-  - pip install -e .
-  - pip install pytest
-  - pip install pytest-cov
-  - pip install coveralls
+- pip install -e .
+- pip install pytest
+- pip install pytest-cov
+- pip install coveralls
 cache: pip
 script: pytest --cov=pyzenodo
 after_success:
-  - coveralls
+- coveralls
 notifications:
   email:
-    - t.klaver@esciencecenter.nl
+  - t.klaver@esciencecenter.nl
+deploy:
+  provider: pypi
+  user: Tommos0
+  password:
+    secure: N53AZolti6mSQ1AUh9ATBsFLOBKRVkEzMbgvQbMvKb1SojBXo8n0N+SPMKwRwYKIczZ7hHR+x0AqWuxZrK/JeUMTJ8h6Z2kAswC1thJZgofyBLPD4dxfdkMU4+I4Ysbt1rqoUqQxT/6l8LFZI0N1mkh+iv/s05/zfnE2rOT1xQPj8ME1zAIhRhD6GW1sb463W0FMCE7atdIMQ7FuLt/QyZ8iTS1uCYY8icJwax0/qIonYuEdxj7zucoHgfqqmUFyY4kgiGxGq4IoIziS9lXRQBMYdAUZPbvuEcP/ORmMA9BCHLcB53edvWEJfUaoKTAidOAJRC3tWopkX208q6Kka6tYBpokb7xpbAtyILF/p5fSD7L0jmwlVHDYhadnUaT0A9tHL/QGHOH44FdfiYpTjACtckL0R44YXWKJdabYea5Cappkb8CKN5M2rRJKN6Wg+V8altwMkrIl4WeUX3IJor/N51InrQAGdOzgifTWB6Edk6U1x0s6EOwWstoLj1BR/FUC5EcnonrKPheUWpuSV9nu88v4nwoH+U5Y5XHO1nXfWl/cyW09RPGquFg7bhuErWupWzDJtdV/1pFgNfqPFjucZz7gcJQDmi0WzVSCngJ3eFUejG32xojJ2WEiIFsr27eYCwiEe0Zkm/NMi6CDxREikEzW5EKvCZoltOk9oPk=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: Tommos0/pyzenodo
