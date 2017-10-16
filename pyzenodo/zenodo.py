@@ -19,11 +19,11 @@ base_url = 'https://zenodo.org/api/'
 class Record(object):
     data = None
 
-    def __init__(self, data):
+    def __init__(self, data, zenodo):
         self.data = data
+        self._zenodo = zenodo
 
-    @staticmethod
-    def _row_to_version(row):
+    def _row_to_version(self, row):
         link = row.select('a')[0]
         texts = row.select('small')
         recid = re.match(r'/record/(\d*)', link.attrs['href']).group(1)
@@ -32,10 +32,17 @@ class Record(object):
             'name'  : link.text,
             'doi'   : texts[0].text,
             'date'  : texts[1].text,
-            'original_version' : Zenodo.get_record(recid).original_version()
+            'original_version' : self._zenodo.get_record(recid).original_version()
         }
 
     def get_versions(self):
+        url = '%srecords?all_versions=1&size=100&q=conceptrecid:%s' % (base_url, self.data['conceptrecid'])
+        print(url)
+        data = requests.get(url).json()
+        return [Record(hit, self._zenodo) for hit in data['hits']['hits']]
+
+
+    def get_versions_from_webpage(self):
         """Get version details from Zenodo webpage (it is not available in the REST api)"""
         res = requests.get('https://zenodo.org/record/'+self.data['conceptrecid'])
         soup = BeautifulSoup(res.text, 'html.parser')
@@ -92,12 +99,10 @@ class Zenodo(object):
                     return record
         return None
 
-    @staticmethod
-    def get_record(recid):
+    def get_record(self, recid):
         url = base_url + 'records/' + recid
-        return Record(requests.get(url).json())
+        return Record(requests.get(url).json(), self)
 
-    @staticmethod
-    def _get_records(params):
+    def _get_records(self, params):
         url = base_url + 'records?' + urlencode(params)
-        return [Record(hit) for hit in requests.get(url).json()['hits']['hits']]
+        return [Record(hit, self) for hit in requests.get(url).json()['hits']['hits']]
