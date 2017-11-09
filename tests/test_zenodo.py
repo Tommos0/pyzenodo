@@ -57,3 +57,13 @@ def test_get_versions_for_record(zen):
         assert version.data['metadata']['title'] is not None
         assert version.data['doi'] is not None and 'zenodo' in version.data['doi']
         assert version.data['created'] is not None
+
+def test_find_record_by_concept_doi(zen):
+    doi = '10.5281/zenodo.1003345'
+    record = zen.find_record_by_doi(doi)
+    assert record.data['conceptdoi'] == doi
+
+def test_find_record_by_doi(zen):
+    doi = '10.5281/zenodo.1003346'
+    record = zen.find_record_by_doi(doi)
+    assert record.data['doi'] == doi

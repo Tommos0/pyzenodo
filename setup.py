@@ -3,7 +3,7 @@
 
 from setuptools import setup, find_packages
 
-__version = '0.0.5'
+__version = '0.0.6'
 
 setup(
     name='pyzenodo',

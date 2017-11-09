@@ -99,6 +99,15 @@ class Zenodo(object):
                     return record
         return None
 
+    def find_record_by_doi(self, doi):
+        params = {'q': 'conceptdoi:%s' % doi.replace('/', '*')}
+        records = self._get_records(params)
+        if len(records) > 0:
+            return records[0]
+        else:
+            params = {'q': 'doi:%s' % doi.replace('/', '*')}
+            return self._get_records(params)[0]
+
     def get_record(self, recid):
         url = base_url + 'records/' + recid
         return Record(requests.get(url).json(), self)
